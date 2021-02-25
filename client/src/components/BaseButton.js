@@ -6,17 +6,17 @@ export const BaseButton = ({ children, ...rest }) => {
 };
 
 const StyledButton = styled.button`
-  background-color: ${colors.$pink};
   margin-top: ${(props) => props.mt};
   margin-left: ${(props) => props.ml};
 
   color: ${colors.$white};
   cursor: pointer;
   user-select: none;
+  background-color: ${colors.$pink};
   border: 1px solid ${colors.$pink};
   font-family: 'Jetbrains mono';
   padding: 10px 15px;
-  border-radius: 18px;
+  border-radius: 16px;
   font-size: 1rem;
 
   :focus {
