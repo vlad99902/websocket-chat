@@ -1,5 +1,7 @@
+import { Routes } from './routes';
+
 function App() {
-  return <h1>Hello my cra</h1>;
+  return <Routes />;
 }
 
 export default App;
