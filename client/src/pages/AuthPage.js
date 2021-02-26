@@ -1,18 +1,87 @@
-import React from 'react';
+import { useState, useContext } from 'react';
+import io from 'socket.io-client';
+import { uid } from 'uid';
 import styled from 'styled-components';
+import { useHistory } from 'react-router-dom';
 
 import { BaseButton } from '../components/BaseButton';
 import { BaseInput } from '../components/BaseInput';
 import { Container } from '../utils/primaryStyledComponents';
+import { UserContext } from '../context/UserContext';
 
 export const AuthPage = () => {
+  const history = useHistory();
+  //context to store username, and can use it in every component
+  const { setUsername } = useContext(UserContext);
+  const [usernameInputValue, setUsernameInputValue] = useState('');
+  //state to check valid form or not
+  const [isFormValid, setIsFormValid] = useState(true);
+
+  //get new username on change input value
+  const onChangeInputUsernameHandler = (event) => {
+    setUsernameInputValue(event.target.value);
+    checkValidInput(event.target.value);
+  };
+
+  /**
+   * Sumbit auth form
+   * @param  event
+   */
+  const onSumbitAuthForm = (event) => {
+    event.preventDefault();
+    setUsernameInputValue('');
+    setUsername(usernameInputValue);
+    connectToTheServer(usernameInputValue, 'localhost:5000');
+  };
+
+  /**
+   * If value is empty returns false
+   * @param {string} value
+   */
+  const checkValidInput = (value) => {
+    if (!value) {
+      setIsFormValid(false);
+    } else {
+      setIsFormValid(true);
+    }
+  };
+
+  const connectToTheServer = (username, serverEndPoint) => {
+    let socket;
+    const room = uid();
+    socket = io(serverEndPoint);
+    console.log(socket, username, room);
+    socket.emit('join', { name: username, room }, () => {
+      history.push(`/chat/${room}`);
+      const previousDataWithThisRoom = localStorage.getItem(
+        `userDataRoom${room}`,
+      );
+      //проверка на имя
+      if (!previousDataWithThisRoom)
+        localStorage.setItem(
+          `userDataRoom${room}`,
+          JSON.stringify({ username, room }),
+        );
+    });
+  };
+
   return (
     <AuthPageWrapper>
       <Container>
         <Header>Please enter your name to chat</Header>
-        <AuthForm>
-          <BaseInput placeholder="Name" maxWidth="450px" />
-          <BaseButton mt="16px">GO</BaseButton>
+        <AuthForm onSubmit={onSumbitAuthForm}>
+          <BaseInput
+            maxWidth="450px"
+            id="username"
+            name="username"
+            placeholder="Name"
+            value={usernameInputValue}
+            isValid={isFormValid}
+            onChange={onChangeInputUsernameHandler}
+          />
+          <BaseButton type="submit" mt="16px" disabled={!isFormValid}>
+            GO
+          </BaseButton>
         </AuthForm>
       </Container>
     </AuthPageWrapper>
