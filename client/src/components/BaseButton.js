@@ -22,4 +22,8 @@ const StyledButton = styled.button`
   :focus {
     border: 1px solid ${colors.$black};
   }
+
+  :disabled {
+    cursor: not-allowed;
+  }
 `;
