@@ -2,11 +2,11 @@ import styled from 'styled-components';
 import { Container } from '../utils/primaryStyledComponents';
 import { ChatContainer } from '../containers/ChatContainer';
 
-export const ChatPage = () => {
+export const ChatPage = ({ location }) => {
   return (
     <ChatPageWrapper>
       <Container>
-        <ChatContainer />
+        <ChatContainer location={location} />
       </Container>
     </ChatPageWrapper>
   );

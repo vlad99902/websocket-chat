@@ -1,14 +1,54 @@
+import React, { useContext } from 'react';
+import { useEffect } from 'react';
 import styled from 'styled-components';
+// import queryString from 'query-string';
+import { io } from 'socket.io-client';
+import { useHistory } from 'react-router-dom';
+
 import { BaseButton } from '../components/BaseButton';
 import { BaseInput } from '../components/BaseInput';
 import { Card } from '../utils/primaryStyledComponents';
 import { Messages } from '../containers/Messages';
+import { UserContext } from '../context/UserContext';
 
-export const ChatContainer = () => {
+export const ChatContainer = ({ location }) => {
+  const { username } = useContext(UserContext);
+
+  const history = useHistory();
+  // useEffect(() => {
+  //   const room = location.pathname.split('/')[2];
+
+  //   let socket;
+  //   socket = io('localhost:5000');
+  //   console.log(socket);
+
+  //   const localStorageCurrentRoom = JSON.parse(
+  //     localStorage.getItem(`userDataRoom${room}`),
+  //   );
+  //   console.log(localStorageCurrentRoom);
+
+  //   if (localStorageCurrentRoom) {
+  //     socket.emit(
+  //       'join',
+  //       { name: localStorageCurrentRoom.username, room },
+  //       () => {},
+  //     );
+  //   } else history.push('/');
+
+  //   return () => {
+  //     socket.emit('disconnect');
+
+  //     socket.off();
+  //   };
+  // }, [location.search]);
+
   return (
     <Card>
       <ChatWrapper>
-        <BaseButton ml="auto">Logout</BaseButton>
+        <h1>{username}</h1>
+        <BaseButton ml="auto" onClick={() => history.push('/')}>
+          Logout
+        </BaseButton>
         <Messages />
         <MessageInput>
           <BaseInput placeholder="Enter your message..." />
