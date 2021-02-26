@@ -3,13 +3,12 @@ import { colors } from '../utils/colors';
 
 import { Message } from '../components/Message';
 
-export const Messages = () => {
+export const Messages = ({ messages, username }) => {
   return (
     <MessagesWrapper>
-      <Message />
-      <Message currentUser />
-      <Message currentUser />
-      <Message currentUser />
+      {messages.map((message, i) => (
+        <Message key={i} message={message} username={username} />
+      ))}
     </MessagesWrapper>
   );
 };

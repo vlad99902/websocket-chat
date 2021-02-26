@@ -1,14 +1,11 @@
 import styled from 'styled-components';
 import { colors } from '../utils/colors';
 
-export const Message = ({ currentUser }) => {
+export const Message = ({ message, username }) => {
   return (
-    <MessageWrapper currentUser={currentUser}>
-      <Author>Витя</Author>
-      <MessageText>
-        Lorem ipsum dolor sit, amet consectetur adipisicing elit. Nostrum
-        corrupti cupiditate quam nihil dignissimos nisi.
-      </MessageText>
+    <MessageWrapper currentUser={username === message.user}>
+      <Author>{message.user}</Author>
+      <MessageText>{message.text}</MessageText>
     </MessageWrapper>
   );
 };

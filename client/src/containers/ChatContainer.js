@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { useEffect } from 'react';
 import styled from 'styled-components';
 // import queryString from 'query-string';
@@ -11,48 +11,72 @@ import { Card } from '../utils/primaryStyledComponents';
 import { Messages } from '../containers/Messages';
 import { UserContext } from '../context/UserContext';
 
+let socket;
+
 export const ChatContainer = ({ location }) => {
   const { username } = useContext(UserContext);
+  const [users, setUsers] = useState([]);
+  const [messages, setMessages] = useState([]);
+  const [message, setMessage] = useState('');
 
   const history = useHistory();
-  // useEffect(() => {
-  //   const room = location.pathname.split('/')[2];
+  useEffect(() => {
+    const room = location.pathname.split('/')[2];
 
-  //   let socket;
-  //   socket = io('localhost:5000');
-  //   console.log(socket);
+    socket = io('localhost:5000');
+    socket.emit('join', { name: username, room }, () => {});
 
-  //   const localStorageCurrentRoom = JSON.parse(
-  //     localStorage.getItem(`userDataRoom${room}`),
-  //   );
-  //   console.log(localStorageCurrentRoom);
+    return () => {
+      socket.emit('disconnectUser');
+      socket.off();
+    };
+  }, [location]);
 
-  //   if (localStorageCurrentRoom) {
-  //     socket.emit(
-  //       'join',
-  //       { name: localStorageCurrentRoom.username, room },
-  //       () => {},
-  //     );
-  //   } else history.push('/');
+  useEffect(() => {
+    socket.on('message', (message) => {
+      setMessages([...messages, message]);
+    });
 
-  //   return () => {
-  //     socket.emit('disconnect');
+    socket.on('roomData', ({ users }) => {
+      setUsers(users);
+    });
+  }, [messages]);
 
-  //     socket.off();
-  //   };
-  // }, [location.search]);
+  const sendMessage = (event) => {
+    event.preventDefault();
+
+    if (message) {
+      socket.emit('sendMessage', message, () => setMessage(''));
+    }
+  };
 
   return (
     <Card>
       <ChatWrapper>
-        <h1>{username}</h1>
-        <BaseButton ml="auto" onClick={() => history.push('/')}>
-          Logout
-        </BaseButton>
-        <Messages />
+        <ChatHeader>
+          <HeaderUserName>{username}</HeaderUserName>
+
+          <ul>
+            {users.map((user, i) => (
+              <li key={i}>{i + 1 + ' ' + user.name}</li>
+            ))}
+          </ul>
+
+          <BaseButton ml="auto" onClick={() => history.push('/')}>
+            Logout
+          </BaseButton>
+        </ChatHeader>
+        <Messages messages={messages} username={username} />
         <MessageInput>
-          <BaseInput placeholder="Enter your message..." />
-          <BaseButton ml="18px">Send</BaseButton>
+          <BaseInput
+            placeholder="Enter your message..."
+            isValid={true}
+            value={message}
+            onChange={(event) => setMessage(event.target.value)}
+          />
+          <BaseButton ml="18px" onClick={sendMessage}>
+            Send
+          </BaseButton>
         </MessageInput>
       </ChatWrapper>
     </Card>
@@ -71,4 +95,17 @@ const ChatWrapper = styled.div`
 const MessageInput = styled.div`
   display: flex;
   margin-top: 18px;
+`;
+
+const HeaderUserName = styled.div`
+  font-weight: 600;
+  font-size: 1.125rem;
+  margin-right: 16px;
+`;
+
+const ChatHeader = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 18px;
 `;

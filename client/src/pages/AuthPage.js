@@ -31,7 +31,9 @@ export const AuthPage = () => {
     event.preventDefault();
     setUsernameInputValue('');
     setUsername(usernameInputValue);
-    connectToTheServer(usernameInputValue, 'localhost:5000');
+    // connectToTheServer(usernameInputValue, 'localhost:5000');
+    const room = uid();
+    history.push(`/chat/${room}`);
   };
 
   /**
@@ -46,24 +48,21 @@ export const AuthPage = () => {
     }
   };
 
-  const connectToTheServer = (username, serverEndPoint) => {
-    let socket;
-    const room = uid();
-    socket = io(serverEndPoint);
-    console.log(socket, username, room);
-    socket.emit('join', { name: username, room }, () => {
-      history.push(`/chat/${room}`);
-      const previousDataWithThisRoom = localStorage.getItem(
-        `userDataRoom${room}`,
-      );
-      //проверка на имя
-      if (!previousDataWithThisRoom)
-        localStorage.setItem(
-          `userDataRoom${room}`,
-          JSON.stringify({ username, room }),
-        );
-    });
-  };
+  // const connectToTheServer = (username, serverEndPoint) => {
+  //   const room = uid();
+  //   let socket;
+  //   socket = io(serverEndPoint);
+  //   console.log(socket, username, room);
+  //   socket.emit('join', { name: username, room }, () => {
+  //     history.push(`/chat/${room}`);
+  //     //проверка на имя
+
+  //     localStorage.setItem(
+  //       `userDataRoom${room}`,
+  //       JSON.stringify({ username, room }),
+  //     );
+  //   });
+  // };
 
   return (
     <AuthPageWrapper>
