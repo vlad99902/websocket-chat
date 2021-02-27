@@ -31,9 +31,14 @@ export const AuthPage = () => {
     event.preventDefault();
     setUsernameInputValue('');
     setUsername(usernameInputValue);
-    // connectToTheServer(usernameInputValue, 'localhost:5000');
-    const room = uid();
-    history.push(`/chat/${room}`);
+
+    // const roomId = uid();
+    const roomId = '0cc70ad7df3';
+    history.push(`/chat/${roomId}`);
+    localStorage.setItem(
+      `userDataRoom${roomId}`,
+      JSON.stringify({ username: usernameInputValue, roomId }),
+    );
   };
 
   /**
@@ -47,22 +52,6 @@ export const AuthPage = () => {
       setIsFormValid(true);
     }
   };
-
-  // const connectToTheServer = (username, serverEndPoint) => {
-  //   const room = uid();
-  //   let socket;
-  //   socket = io(serverEndPoint);
-  //   console.log(socket, username, room);
-  //   socket.emit('join', { name: username, room }, () => {
-  //     history.push(`/chat/${room}`);
-  //     //проверка на имя
-
-  //     localStorage.setItem(
-  //       `userDataRoom${room}`,
-  //       JSON.stringify({ username, room }),
-  //     );
-  //   });
-  // };
 
   return (
     <AuthPageWrapper>

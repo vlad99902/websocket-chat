@@ -3,8 +3,8 @@ import { colors } from '../utils/colors';
 
 export const Message = ({ message, username }) => {
   return (
-    <MessageWrapper currentUser={username === message.user}>
-      <Author>{message.user}</Author>
+    <MessageWrapper currentUser={username === message.username}>
+      <Author>{message.username}</Author>
       <MessageText>{message.text}</MessageText>
     </MessageWrapper>
   );

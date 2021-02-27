@@ -1,19 +1,21 @@
 const users = [];
 
-const addUser = ({ id, name, room }) => {
-  //delete spaces and lowercase
-  name = name.trim().toLowerCase();
-  room = room.trim().toLowerCase();
+const addUser = ({ id, username, roomId }) => {
+  if (!username || !roomId)
+    return { error: 'Username and roomId are required.' };
 
-  //if user with this name exists in this room
+  //delete spaces
+  username = username.trim();
+  roomId = roomId.trim();
+
+  //if user with this username exists in this roomId
   const existingUser = users.find(
-    (user) => user.room === room && user.name === name,
+    (user) => user.roomId === roomId && user.username === username,
   );
 
-  if (!name || !room) return { error: 'Username and room are required.' };
   if (existingUser) return { error: 'Username is taken.' };
 
-  const user = { id, name, room };
+  const user = { id, username, roomId };
 
   users.push(user);
 
@@ -30,6 +32,20 @@ const removeUser = (id) => {
 
 const getUser = (id) => users.find((user) => user.id === id);
 
-const getUsersInRoom = (room) => users.filter((user) => user.room === room);
+const getUsersInRoom = (roomId) =>
+  users.filter((user) => user.roomId === roomId);
 
-module.exports = { addUser, removeUser, getUser, getUsersInRoom };
+const isRoomCreated = (roomId) =>
+  users.reduce(
+    (res, user) => (user.roomId === roomId ? (res = true) : {}),
+    false,
+  );
+
+module.exports = {
+  users,
+  addUser,
+  removeUser,
+  getUser,
+  getUsersInRoom,
+  isRoomCreated,
+};
