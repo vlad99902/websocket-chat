@@ -15,11 +15,11 @@ import { ENDPOINT } from '../utils/serverInfo';
 let socket;
 
 export const ChatContainer = ({ location }) => {
-  const { username, setUsername } = useContext(UserContext);
+  const { username, setUsername, roomId, setRoomId } = useContext(UserContext);
   const [users, setUsers] = useState([]);
   const [messages, setMessages] = useState([]);
   const [message, setMessage] = useState('');
-  const [roomId, setRoomId] = useState('');
+  // const [roomId, setRoomId] = useState('');
   // const [userId, setUserId] = useState('')
 
   const history = useHistory();
@@ -28,19 +28,20 @@ export const ChatContainer = ({ location }) => {
    * Effect when page mount
    */
   useEffect(() => {
+    socket = io(ENDPOINT);
     //get room id from path
-    const roomId = location.pathname.split('/')[2];
+    const linkRoomId = location.pathname.split('/')[2];
 
-    const localUserData = JSON.parse(sessionStorage.getItem(roomId));
+    setRoomId(linkRoomId);
 
-    // if (roomId && localUserData.roomId) {
-    //   history.push('/');
-    // }
+    const localUserData = JSON.parse(sessionStorage.getItem(linkRoomId));
 
     let localUsername = username;
 
     if (!username && !localUserData) {
+      // logoutHandler(linkRoomId);
       history.push('/');
+      return () => {};
     }
 
     if (!username && localUserData) {
@@ -48,16 +49,16 @@ export const ChatContainer = ({ location }) => {
       setUsername(localUsername);
     }
 
-    setRoomId(roomId);
-
-    socket = io(ENDPOINT);
-
-    socket.emit('join', { username: localUsername, roomId }, (error) => {
-      if (error) {
-        console.log(error);
-        logoutHandler(roomId);
-      }
-    });
+    socket.emit(
+      'join',
+      { username: localUsername, roomId: linkRoomId },
+      (error) => {
+        if (error) {
+          console.log(error);
+          logoutHandler(linkRoomId);
+        }
+      },
+    );
 
     return () => {
       socket.emit('disconnectUser');
@@ -85,6 +86,7 @@ export const ChatContainer = ({ location }) => {
 
   const logoutHandler = (roomId) => {
     sessionStorage.removeItem(roomId);
+    setRoomId('');
     history.push('/');
   };
 

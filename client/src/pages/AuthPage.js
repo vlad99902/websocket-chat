@@ -12,7 +12,7 @@ import { UserContext } from '../context/UserContext';
 export const AuthPage = () => {
   const history = useHistory();
   //context to store username, and can use it in every component
-  const { setUsername } = useContext(UserContext);
+  const { setUsername, roomId, setRoomId } = useContext(UserContext);
   const [usernameInputValue, setUsernameInputValue] = useState('');
   //state to check valid form or not
   const [isFormValid, setIsFormValid] = useState(true);
@@ -32,12 +32,16 @@ export const AuthPage = () => {
     setUsernameInputValue('');
     setUsername(usernameInputValue);
 
-    // const roomId = uid();
-    const roomId = '0cc70ad7df3';
-    history.push(`/chat/${roomId}`);
+    let authRoomId = roomId;
+    if (!roomId) {
+      authRoomId = uid();
+      setRoomId(authRoomId);
+    }
+    // const roomId = '0cc70ad7df3';
+    history.push(`/chat/${authRoomId}`);
     sessionStorage.setItem(
-      roomId,
-      JSON.stringify({ username: usernameInputValue, roomId }),
+      authRoomId,
+      JSON.stringify({ username: usernameInputValue, roomId: authRoomId }),
     );
   };
 
@@ -56,13 +60,16 @@ export const AuthPage = () => {
   return (
     <AuthPageWrapper>
       <Container>
-        <Header>Please enter your name to chat</Header>
+        <Header>
+          <Title>Please enter your name to chat</Title>
+          {roomId && <SubTitle>Room id: {roomId}</SubTitle>}
+        </Header>
         <AuthForm onSubmit={onSumbitAuthForm}>
           <BaseInput
             maxWidth="450px"
             id="username"
             name="username"
-            placeholder="Name"
+            placeholder="Enter your name"
             value={usernameInputValue}
             isValid={isFormValid}
             onChange={onChangeInputUsernameHandler}
@@ -80,18 +87,28 @@ export const AuthPage = () => {
   );
 };
 
-const AuthPageWrapper = styled.div`
+const AuthPageWrapper = styled.section`
   height: 100vh;
   display: flex;
   align-items: center;
 `;
 
-const Header = styled.h1`
+const Header = styled.div`
+  margin-bottom: 32px;
+`;
+
+const Title = styled.h1`
   font-size: 2rem;
   font-weight: 600;
   text-align: center;
+`;
 
-  margin-bottom: 32px;
+const SubTitle = styled.h1`
+  font-size: 1.125rem;
+  font-weight: 600;
+  text-align: center;
+
+  margin-top: 16px;
 `;
 
 const AuthForm = styled.form`

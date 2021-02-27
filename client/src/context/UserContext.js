@@ -4,12 +4,12 @@ export const UserContext = React.createContext();
 
 export const UserContextProvider = ({ children }) => {
   const [username, setUsername] = useState('');
-  // const [connection, setConnection] = useState(null);
+  const [roomId, setRoomId] = useState('');
 
-  const userContextValue = useMemo(() => ({ username, setUsername }), [
-    username,
-    setUsername,
-  ]);
+  const userContextValue = useMemo(
+    () => ({ username, setUsername, roomId, setRoomId }),
+    [username, setUsername, roomId, setRoomId],
+  );
 
   return (
     <UserContext.Provider value={userContextValue}>

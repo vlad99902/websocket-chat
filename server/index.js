@@ -76,8 +76,8 @@ io.on('connection', (socket) => {
       console.log(`User ${user.username} was disconnected`);
 
       io.to(user.roomId).emit('message', {
-        user: 'admin',
-        text: `${user.username} has left`,
+        username: 'admin',
+        text: `${user.username} has left...`,
       });
     }
   });
@@ -91,7 +91,7 @@ io.on('connection', (socket) => {
       console.log(`User ${user.username} was disconnected`);
 
       io.to(user.roomId).emit('message', {
-        user: 'admin',
+        username: 'admin',
         text: `${user.username} has left`,
       });
     }
