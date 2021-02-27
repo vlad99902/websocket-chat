@@ -84,6 +84,21 @@ io.on('connection', (socket) => {
       });
     }
   });
+
+  socket.on('disconnect', () => {
+    const user = removeUser(currentUserId);
+
+    console.log(socket.id, currentUserId, user);
+
+    if (user) {
+      console.log(`User ${user.username} was disconnected`);
+
+      io.to(user.roomId).emit('message', {
+        user: 'admin',
+        text: `${user.username} has left`,
+      });
+    }
+  });
 });
 
 app.get('/', (req, res) =>

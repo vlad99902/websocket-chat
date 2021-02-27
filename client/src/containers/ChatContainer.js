@@ -38,14 +38,14 @@ export const ChatContainer = ({ location }) => {
 
     socket.emit('join', { username, roomId }, (error) => {
       console.log(error);
+      history.push('/');
     });
 
     return () => {
-      console.log('disconnect');
       socket.emit('disconnectUser');
       socket.off();
     };
-  }, [location, username]);
+  }, [location, username, history]);
 
   useEffect(() => {
     socket.on('message', (message) => {
@@ -106,7 +106,7 @@ export const ChatContainer = ({ location }) => {
 
 const ChatWrapper = styled.div`
   width: 600px;
-  height: 400px;
+  height: 700px;
 
   display: flex;
   flex-direction: column;
