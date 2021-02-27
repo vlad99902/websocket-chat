@@ -26,9 +26,8 @@ const io = socketio(server, {
 });
 
 io.on('connection', (socket) => {
-  const currentUserId = socket.id;
-
   socket.on('join', ({ username, roomId }, callback) => {
+    console.log(username);
     //check was room created earlier or not
     const wasRoomCreated = isRoomCreated(roomId);
     //create new user object and save
@@ -71,9 +70,7 @@ io.on('connection', (socket) => {
   });
 
   socket.on('disconnectUser', () => {
-    const user = removeUser(currentUserId);
-
-    console.log(socket.id, currentUserId, user);
+    const user = removeUser(socket.id);
 
     if (user) {
       console.log(`User ${user.username} was disconnected`);
@@ -86,9 +83,9 @@ io.on('connection', (socket) => {
   });
 
   socket.on('disconnect', () => {
-    const user = removeUser(currentUserId);
+    const user = removeUser(socket.id);
 
-    console.log(socket.id, currentUserId, user);
+    console.log('refresh disconnect');
 
     if (user) {
       console.log(`User ${user.username} was disconnected`);

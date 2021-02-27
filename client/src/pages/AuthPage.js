@@ -32,8 +32,8 @@ export const AuthPage = () => {
     setUsernameInputValue('');
     setUsername(usernameInputValue);
 
-    const roomId = uid();
-    // const roomId = '0cc70ad7df3';
+    // const roomId = uid();
+    const roomId = '0cc70ad7df3';
     history.push(`/chat/${roomId}`);
     sessionStorage.setItem(
       roomId,

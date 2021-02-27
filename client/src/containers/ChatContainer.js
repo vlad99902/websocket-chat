@@ -30,22 +30,40 @@ export const ChatContainer = ({ location }) => {
   useEffect(() => {
     //get room id from path
     const roomId = location.pathname.split('/')[2];
-    // const username = JSON.parse(localStorage.getItem(`userDataRoom${room}`))
-    //   .username;
+
+    const localUserData = JSON.parse(sessionStorage.getItem(roomId));
+
+    // if (roomId && localUserData.roomId) {
+    //   history.push('/');
+    // }
+
+    let localUsername = username;
+
+    if (!username && !localUserData) {
+      history.push('/');
+    }
+
+    if (!username && localUserData) {
+      localUsername = localUserData.username;
+      setUsername(localUsername);
+    }
+
     setRoomId(roomId);
 
     socket = io(ENDPOINT);
 
-    socket.emit('join', { username, roomId }, (error) => {
-      console.log(error);
-      history.push('/');
+    socket.emit('join', { username: localUsername, roomId }, (error) => {
+      if (error) {
+        console.log(error);
+        logoutHandler(roomId);
+      }
     });
 
     return () => {
       socket.emit('disconnectUser');
       socket.off();
     };
-  }, [location, username, history]);
+  }, []);
 
   useEffect(() => {
     socket.on('message', (message) => {
@@ -65,6 +83,11 @@ export const ChatContainer = ({ location }) => {
     }
   };
 
+  const logoutHandler = (roomId) => {
+    sessionStorage.removeItem(roomId);
+    history.push('/');
+  };
+
   return (
     <Card>
       <ChatWrapper>
@@ -77,13 +100,7 @@ export const ChatContainer = ({ location }) => {
             ))} */}
           </ul>
 
-          <BaseButton
-            ml="auto"
-            onClick={() => {
-              history.push('/');
-              localStorage.removeItem(`userDataRoom${roomId}`);
-            }}
-          >
+          <BaseButton ml="auto" onClick={() => logoutHandler(roomId)}>
             Logout
           </BaseButton>
         </ChatHeader>

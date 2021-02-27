@@ -4,10 +4,6 @@ const addUser = ({ id, username, roomId }) => {
   if (!username || !roomId)
     return { error: 'Username and roomId are required.' };
 
-  //delete spaces
-  username = username.trim();
-  roomId = roomId.trim();
-
   //if user with this username exists in this roomId
   const existingUser = users.find(
     (user) => user.roomId === roomId && user.username === username,
