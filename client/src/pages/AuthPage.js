@@ -32,11 +32,11 @@ export const AuthPage = () => {
     setUsernameInputValue('');
     setUsername(usernameInputValue);
 
-    // const roomId = uid();
-    const roomId = '0cc70ad7df3';
+    const roomId = uid();
+    // const roomId = '0cc70ad7df3';
     history.push(`/chat/${roomId}`);
-    localStorage.setItem(
-      `userDataRoom${roomId}`,
+    sessionStorage.setItem(
+      roomId,
       JSON.stringify({ username: usernameInputValue, roomId }),
     );
   };
@@ -46,7 +46,7 @@ export const AuthPage = () => {
    * @param {string} value
    */
   const checkValidInput = (value) => {
-    if (!value) {
+    if (!value || value.split(' ').length > 1) {
       setIsFormValid(false);
     } else {
       setIsFormValid(true);
@@ -67,7 +67,11 @@ export const AuthPage = () => {
             isValid={isFormValid}
             onChange={onChangeInputUsernameHandler}
           />
-          <BaseButton type="submit" mt="16px" disabled={!isFormValid}>
+          <BaseButton
+            type="submit"
+            mt="16px"
+            disabled={!isFormValid || !usernameInputValue}
+          >
             GO
           </BaseButton>
         </AuthForm>
