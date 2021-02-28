@@ -1,6 +1,10 @@
 import styled from 'styled-components';
 import { colors } from '../utils/colors';
 
+/**
+ * Component to out users list in chat
+ * @param {object} args
+ */
 export const UsersList = ({ users, currentUsername }) => {
   return (
     <UsersListsWrapper>

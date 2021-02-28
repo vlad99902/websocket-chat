@@ -3,6 +3,10 @@ import styled from 'styled-components';
 import { Modal } from '../components/Modal';
 import { UserContext } from '../context/UserContext';
 
+/**
+ * Handle error and out it
+ */
+
 export const ErrorModal = () => {
   const [isOpenedModal, setIsOpenedModal] = useState(false);
   const { globalError, setGlobalError } = useContext(UserContext);

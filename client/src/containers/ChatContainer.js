@@ -14,6 +14,10 @@ import { UsersList } from './UsersList';
 
 let socket;
 
+/**
+ * Component to control all chat component
+ * @param {object} param0
+ */
 export const ChatContainer = ({ location }) => {
   const {
     username,
@@ -35,13 +39,13 @@ export const ChatContainer = ({ location }) => {
     socket = io(ENDPOINT);
     //get room id from path
     const linkRoomId = location.pathname.split('/')[2];
-
     setRoomId(linkRoomId);
 
+    //get user data from session storage
     const localUserData = JSON.parse(sessionStorage.getItem(linkRoomId));
-
     let localUsername = username;
 
+    //if userdata doesn't exists go to login page
     if (!username && !localUserData) {
       history.push('/');
       return () => {
@@ -49,19 +53,23 @@ export const ChatContainer = ({ location }) => {
       };
     }
 
+    //if userdata exists in session storage set username
     if (!username && localUserData) {
       localUsername = localUserData.username;
       setUsername(localUsername);
     }
 
+    //load chat history for current room
     socket.on('chatHistory', (chatHistory) => {
       setMessages([...messages, ...chatHistory]);
     });
 
+    //load online users
     socket.on('roomData', ({ users }) => {
       setUsers(users);
     });
 
+    //join chat
     socket.emit(
       'join',
       { username: localUsername, roomId: linkRoomId },
@@ -74,6 +82,7 @@ export const ChatContainer = ({ location }) => {
       },
     );
 
+    //off socket and disconnect on unmount
     return () => {
       socket.emit('disconnectUser');
       socket.off();
@@ -81,6 +90,7 @@ export const ChatContainer = ({ location }) => {
   }, []);
 
   useEffect(() => {
+    //if message sended, load it
     socket.on('message', (message) => {
       setMessages([...messages, message]);
     });
@@ -90,15 +100,22 @@ export const ChatContainer = ({ location }) => {
     };
   }, [messages]);
 
+  /**
+   * Function to send message
+   * @param {} event
+   */
   const sendMessage = (event) => {
     event.preventDefault();
-
     if (message) {
       const messageToSend = { text: message, sendTime: new Date() };
       socket.emit('sendMessage', messageToSend, () => setMessage(''));
     }
   };
 
+  /**
+   * Function to logout user
+   * @param {string} roomId
+   */
   const logoutHandler = (roomId) => {
     sessionStorage.removeItem(roomId);
     setRoomId('');
@@ -143,7 +160,6 @@ export const ChatContainer = ({ location }) => {
 
 const ChatWrapper = styled.div`
   max-width: 800px;
-
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -151,11 +167,16 @@ const ChatWrapper = styled.div`
 
 const UsersListWrapper = styled.div`
   margin-right: 16px;
+
+  @media (max-width: 620px) {
+    margin-bottom: 12px;
+  }
 `;
 
 const MessagesAndInfoWrapper = styled.div`
   display: flex;
-  height: 550px;
+  flex-wrap: wrap;
+  justify-content: center;
 `;
 
 const MessageInput = styled.form`
