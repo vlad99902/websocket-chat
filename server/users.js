@@ -31,17 +31,10 @@ const getUser = (id) => users.find((user) => user.id === id);
 const getUsersInRoom = (roomId) =>
   users.filter((user) => user.roomId === roomId);
 
-const isRoomCreated = (roomId) =>
-  users.reduce(
-    (res, user) => (user.roomId === roomId ? (res = true) : {}),
-    false,
-  );
-
 module.exports = {
   users,
   addUser,
   removeUser,
   getUser,
   getUsersInRoom,
-  isRoomCreated,
 };

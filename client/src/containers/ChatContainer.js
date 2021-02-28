@@ -11,6 +11,7 @@ import { Card } from '../utils/primaryStyledComponents';
 import { Messages } from '../containers/Messages';
 import { UserContext } from '../context/UserContext';
 import { ENDPOINT } from '../utils/serverInfo';
+import { UsersList } from './UsersList';
 
 let socket;
 
@@ -77,10 +78,6 @@ export const ChatContainer = ({ location }) => {
     socket.on('message', (message) => {
       setMessages([...messages, message]);
     });
-
-    // socket.on('roomData', ({ users }) => {
-    //   setUsers(users);
-    // });
   }, [messages]);
 
   const sendMessage = (event) => {
@@ -105,17 +102,16 @@ export const ChatContainer = ({ location }) => {
         <ChatHeader>
           <HeaderUserName>{username}</HeaderUserName>
 
-          <ul>
-            {users.map((user, i) => (
-              <li key={i}>{i + 1 + ' ' + user.username}</li>
-            ))}
-          </ul>
-
           <BaseButton ml="auto" onClick={() => logoutHandler(roomId)}>
             Logout
           </BaseButton>
         </ChatHeader>
-        <Messages messages={messages} username={username} />
+        <MessagesAndInfoWrapper>
+          <UsersListWrapper>
+            <UsersList users={users} currentUsername={username}></UsersList>
+          </UsersListWrapper>
+          <Messages messages={messages} username={username} />
+        </MessagesAndInfoWrapper>
         <MessageInput onSubmit={sendMessage}>
           <BaseInput
             placeholder="Enter your message..."
@@ -123,7 +119,12 @@ export const ChatContainer = ({ location }) => {
             value={message}
             onChange={(event) => setMessage(event.target.value)}
           />
-          <BaseButton ml="18px" type="submit" disabled={!message}>
+          <BaseButton
+            ml="18px"
+            type="submit"
+            disabled={!message}
+            variant="submit"
+          >
             Send
           </BaseButton>
         </MessageInput>
@@ -133,12 +134,21 @@ export const ChatContainer = ({ location }) => {
 };
 
 const ChatWrapper = styled.div`
-  width: 600px;
-  height: 700px;
+  max-width: 800px;
+  /* height: 700px; */
 
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+`;
+
+const UsersListWrapper = styled.div`
+  margin-right: 16px;
+`;
+
+const MessagesAndInfoWrapper = styled.div`
+  display: flex;
+  height: 550px;
 `;
 
 const MessageInput = styled.form`

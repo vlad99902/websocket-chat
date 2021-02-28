@@ -8,10 +8,9 @@ const {
   removeUser,
   getUser,
   getUsersInRoom,
-  isRoomCreated,
 } = require('./users');
 
-const { getMessages, addMessage, getMessagesByRoomId } = require('./messages');
+const { addMessage, getMessagesByRoomId } = require('./messages');
 
 const app = express();
 app.use(cors);
@@ -29,9 +28,6 @@ const io = socketio(server, {
 
 io.on('connection', (socket) => {
   socket.on('join', ({ username, roomId }, callback) => {
-    console.log(username);
-    //check was room created earlier or not
-    const wasRoomCreated = isRoomCreated(roomId);
     //create new user object and save
     const { user, error } = addUser({
       id: socket.id,
@@ -59,9 +55,7 @@ io.on('connection', (socket) => {
 
     io.to(user.roomId).emit('roomData', { users: getUsersInRoom(user.roomId) });
 
-    console.log(
-      `User ${username} was connected to the room ${roomId}. ${wasRoomCreated}`,
-    );
+    console.log(`User ${username} was connected to the room ${roomId}.`);
     console.log(users);
   });
 

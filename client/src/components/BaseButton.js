@@ -1,19 +1,24 @@
 import styled from 'styled-components';
 import { colors } from '../utils/colors';
 
-export const BaseButton = ({ children, ...rest }) => {
-  return <StyledButton {...rest}>{children}</StyledButton>;
+export const BaseButton = ({ children, variant, ...rest }) => {
+  return (
+    <StyledButton variant={variant} {...rest}>
+      {children}
+    </StyledButton>
+  );
 };
 
 const StyledButton = styled.button`
   margin-top: ${(props) => props.mt};
   margin-left: ${(props) => props.ml};
+  ${(props) =>
+    props.variant === 'submit'
+      ? `background-color: ${colors.$green}; color: ${colors.$black}; border: 1px solid ${colors.$green};`
+      : `background-color: ${colors.$pink}; color: ${colors.$white}; border: 1px solid ${colors.$pink};`}
 
-  color: ${colors.$white};
   cursor: pointer;
   user-select: none;
-  background-color: ${colors.$pink};
-  border: 1px solid ${colors.$pink};
   font-family: 'Jetbrains mono';
   padding: 10px 15px;
   border-radius: 16px;
