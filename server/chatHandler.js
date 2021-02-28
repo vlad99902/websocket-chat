@@ -1,10 +1,12 @@
-const {
-  users,
-  addUser,
-  removeUser,
-  getUser,
-  getUsersInRoom,
-} = require('./users');
+// const {
+//   users,
+//   addUser,
+//   removeUser,
+//   getUser,
+//   getUsersInRoom,
+// } = require('./users');
+
+const userStorage = require('./users');
 
 const {
   addMessage,
@@ -17,7 +19,7 @@ module.exports = (io) => {
     const socket = this;
 
     //add user to local server storage
-    const { user, error } = addUser({
+    const { user, error } = userStorage.addUser({
       id: socket.id,
       username,
       roomId,
@@ -48,13 +50,15 @@ module.exports = (io) => {
     socket.join(user.roomId);
 
     //send users in room
-    io.to(user.roomId).emit('roomData', { users: getUsersInRoom(user.roomId) });
+    io.to(user.roomId).emit('roomData', {
+      users: userStorage.getUsersInRoom(user.roomId),
+    });
   };
 
   const sendMessage = function (message, callback) {
     const socket = this;
     //get user from local store
-    const user = getUser(socket.id);
+    const user = userStorage.getUserById(socket.id);
     //make message to send
     const messageToSend = {
       username: user.username,
@@ -71,20 +75,21 @@ module.exports = (io) => {
   const disconnectUser = function () {
     const socket = this;
     //remove user from local users storage
-    const user = removeUser(socket.id);
+    const user = userStorage.removeUser(socket.id);
 
     //if this user was deleted send system message and new users counter
     if (user) {
       //message history clear if no users in room
-      const usersInRoom = getUsersInRoom(user.roomId);
-      if (!usersInRoom.length) removeMessagesByRoomId(user.roomId);
+      const usersInRoom = userStorage.getUsersInRoom(user.roomId);
+      if (usersInRoom)
+        if (!usersInRoom.length) removeMessagesByRoomId(user.roomId);
       //left user admin message
       io.to(user.roomId).emit('message', {
         username: 'admin',
         text: `${user.username} has left...`,
       });
       io.to(user.roomId).emit('roomData', {
-        users: getUsersInRoom(user.roomId),
+        users: userStorage.getUsersInRoom(user.roomId),
       });
     }
   };

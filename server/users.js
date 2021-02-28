@@ -1,39 +1,51 @@
-const users = [];
+class User {
+  //array to store users
+  users = [];
 
-const addUser = ({ id, username, roomId }) => {
-  if (!username || !roomId) return { error: 'Username are required.' };
+  /**
+   * Method to add new user. Returns error if it's necessary
+   * @param {*} userParamsObject
+   */
+  addUser({ id, username, roomId }) {
+    if (!username || !roomId) return { error: 'Username are required.' };
+    //if user with this username exists in this roomId
+    const existingUser = this.users.find(
+      (user) => user.roomId === roomId && user.username === username,
+    );
+    if (existingUser) return { error: 'Username is taken in this room.' };
 
-  //if user with this username exists in this roomId
-  const existingUser = users.find(
-    (user) => user.roomId === roomId && user.username === username,
-  );
-
-  if (existingUser) return { error: 'Username is taken in this room.' };
-
-  const user = { id, username, roomId };
-
-  users.push(user);
-
-  return { user };
-};
-
-const removeUser = (id) => {
-  const index = users.findIndex((user) => user.id === id);
-
-  if (index !== -1) {
-    return users.splice(index, 1)[0];
+    const user = { id, username, roomId };
+    this.users.push(user);
+    return { user };
   }
-};
 
-const getUser = (id) => users.find((user) => user.id === id);
+  /**
+   * Method to remove user from users storage
+   * @param {string} id
+   */
+  removeUser(id) {
+    const index = this.users.findIndex((user) => user.id === id);
 
-const getUsersInRoom = (roomId) =>
-  users.filter((user) => user.roomId === roomId);
+    if (index !== -1) {
+      return this.users.splice(index, 1)[0];
+    }
+  }
 
-module.exports = {
-  users,
-  addUser,
-  removeUser,
-  getUser,
-  getUsersInRoom,
-};
+  /**
+   * Method to get user by id
+   * @param {string} id
+   */
+  getUserById(id) {
+    return this.users.find((user) => user.id === id);
+  }
+
+  /**
+   * Method to get users array by room
+   * @param {string} roomId
+   */
+  getUsersInRoom(roomId) {
+    return this.users.filter((user) => user.roomId === roomId);
+  }
+}
+
+module.exports = new User();
