@@ -1,16 +1,23 @@
 import styled from 'styled-components';
 import { colors } from '../utils/colors';
+import { dateToHumanFormat } from '../utils/dateAndTime';
 
+/**
+ * Component to correctly render message and sustem notification
+ * @param {object} props - message, current user username
+ */
 export const Message = ({ message, username }) => {
   return (
     <MessageWrapper
       currentUser={username === message.username}
       type={message.username}
     >
-      {' '}
       {message.username !== 'admin' ? (
         <>
-          <Author>{message.username}</Author>
+          <MessageInfoWrapper>
+            <Author>{message.username}</Author>
+            <MessageTime>{dateToHumanFormat(message.sendTime)}</MessageTime>
+          </MessageInfoWrapper>
           <MessageText>{message.text}</MessageText>
         </>
       ) : (
@@ -48,10 +55,24 @@ const Author = styled.h3`
   color: ${colors.$darkGray};
 `;
 
+const MessageInfoWrapper = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+
+  margin-bottom: 3px;
+`;
+
 const MessageText = styled.p`
   font-size: 0.875rem;
   font-weight: 300;
   color: ${colors.$black};
+`;
+
+const MessageTime = styled.h4`
+  font-size: 0.75rem;
+  font-weight: 300;
+  color: ${colors.$darkGray};
 `;
 
 const AdminMessageText = styled.h4`

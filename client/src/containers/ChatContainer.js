@@ -84,7 +84,8 @@ export const ChatContainer = ({ location }) => {
     event.preventDefault();
 
     if (message) {
-      socket.emit('sendMessage', message, () => setMessage(''));
+      const messageToSend = { text: message, sendTime: new Date() };
+      socket.emit('sendMessage', messageToSend, () => setMessage(''));
     }
   };
 
@@ -135,7 +136,6 @@ export const ChatContainer = ({ location }) => {
 
 const ChatWrapper = styled.div`
   max-width: 800px;
-  /* height: 700px; */
 
   display: flex;
   flex-direction: column;

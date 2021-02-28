@@ -61,9 +61,10 @@ io.on('connection', (socket) => {
 
   socket.on('sendMessage', (message, callback) => {
     const user = getUser(socket.id);
+    console.log(message);
     const messageToSend = {
       username: user.username,
-      text: message,
+      ...message,
     };
     io.to(user.roomId).emit('message', messageToSend);
     addMessage({ ...messageToSend, roomId: user.roomId });

@@ -3,6 +3,10 @@ import { colors } from '../utils/colors';
 
 import { Message } from '../components/Message';
 
+/**
+ * Component to map messages array
+ * @param {object} props - messages array and current user username
+ */
 export const Messages = ({ messages, username }) => {
   return (
     <MessagesWrapper>
@@ -14,7 +18,6 @@ export const Messages = ({ messages, username }) => {
 };
 
 const MessagesWrapper = styled.div`
-  height: 100%;
   border-radius: 16px;
   border: 1px solid ${colors.$gray};
   padding: 16px;
