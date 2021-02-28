@@ -1,6 +1,11 @@
 import React from 'react';
 import styled from 'styled-components';
 
+/**
+ * Modal component
+ * @param {object} param0
+ */
+
 export const Modal = ({
   children,
   isOpened,

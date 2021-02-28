@@ -1,6 +1,10 @@
 import styled from 'styled-components';
 import { colors } from '../utils/colors';
 
+/**
+ * Base input component
+ * @param {object} param0
+ */
 export const BaseInput = ({ mt, ml, isValid, ...rest }) => {
   return <InputArea mt={mt} ml={ml} isValid={isValid} {...rest} />;
 };

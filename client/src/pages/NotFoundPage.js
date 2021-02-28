@@ -3,6 +3,9 @@ import { BaseButton } from '../components/BaseButton';
 import { Container } from '../utils/primaryStyledComponents';
 import { useHistory } from 'react-router-dom';
 
+/**
+ * 404 not found page
+ */
 export const NotFoundPage = () => {
   const history = useHistory();
 

@@ -8,6 +8,9 @@ import { BaseInput } from '../components/BaseInput';
 import { Container } from '../utils/primaryStyledComponents';
 import { UserContext } from '../context/UserContext';
 
+/**
+ * Auth page
+ */
 export const AuthPage = () => {
   const history = useHistory();
   //context to store username, and can use it in every component
@@ -32,11 +35,13 @@ export const AuthPage = () => {
     setUsername(usernameInputValue);
 
     let authRoomId = roomId;
+    //if no room create new
     if (!roomId) {
       authRoomId = uid();
       setRoomId(authRoomId);
     }
 
+    //go to room page and save room info
     history.push(`/chat/${authRoomId}`);
     sessionStorage.setItem(
       authRoomId,
@@ -49,7 +54,7 @@ export const AuthPage = () => {
    * @param {string} value
    */
   const checkValidInput = (value) => {
-    if (!value || value.split(' ').length > 1) {
+    if (!value || value.split(' ').length > 1 || value === 'admin') {
       setIsFormValid(false);
     } else {
       setIsFormValid(true);

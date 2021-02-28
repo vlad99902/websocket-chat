@@ -1,6 +1,10 @@
 import styled from 'styled-components';
 import { colors } from '../utils/colors';
 
+/**
+ * Base button component
+ * @param {object} param0
+ */
 export const BaseButton = ({ children, variant, ...rest }) => {
   return (
     <StyledButton variant={variant} {...rest}>
