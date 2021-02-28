@@ -1,7 +1,6 @@
 import React, { useContext, useState } from 'react';
 import { useEffect } from 'react';
 import styled from 'styled-components';
-// import queryString from 'query-string';
 import { io } from 'socket.io-client';
 import { useHistory } from 'react-router-dom';
 
@@ -70,6 +69,7 @@ export const ChatContainer = ({ location }) => {
         if (error) {
           setGlobalError(error);
           history.push('/');
+          sessionStorage.removeItem(roomId);
         }
       },
     );
@@ -100,8 +100,6 @@ export const ChatContainer = ({ location }) => {
     setRoomId('');
     history.push('/');
   };
-
-  console.log(users);
 
   return (
     <Card>
