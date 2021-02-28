@@ -16,9 +16,11 @@ const io = socketio(server, {
   },
 });
 
-const { joinChat, sendMessage, disconnectUser } = require('./chatHandler.js')(
-  io,
-);
+const {
+  joinChat,
+  sendMessage,
+  disconnectUser,
+} = require('./controller/chatHandler.js')(io);
 
 const onConnection = (socket) => {
   socket.on('join', joinChat);

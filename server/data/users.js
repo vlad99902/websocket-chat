@@ -1,4 +1,4 @@
-class User {
+class Users {
   //array to store users
   users = [];
 
@@ -48,4 +48,4 @@ class User {
   }
 }
 
-module.exports = new User();
+module.exports = new Users();

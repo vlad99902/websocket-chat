@@ -1,18 +1,5 @@
-// const {
-//   users,
-//   addUser,
-//   removeUser,
-//   getUser,
-//   getUsersInRoom,
-// } = require('./users');
-
-const userStorage = require('./users');
-
-const {
-  addMessage,
-  getMessagesByRoomId,
-  removeMessagesByRoomId,
-} = require('./messages');
+const userStorage = require('../data/users');
+const messagesStorage = require('../data/messages');
 
 module.exports = (io) => {
   const joinChat = function ({ username, roomId }, callback) {
@@ -31,8 +18,10 @@ module.exports = (io) => {
     }
 
     //loading chat history
-    socket.emit('chatHistory', getMessagesByRoomId(user.roomId));
-    console.log(getMessagesByRoomId(user.roomId));
+    socket.emit(
+      'chatHistory',
+      messagesStorage.getMessagesByRoomId(user.roomId),
+    );
 
     //send system message
     socket.emit('message', {
@@ -67,7 +56,7 @@ module.exports = (io) => {
     //send message to users in room
     io.to(user.roomId).emit('message', messageToSend);
     //add message to message storage
-    addMessage({ ...messageToSend, roomId: user.roomId });
+    messagesStorage.addMessage({ ...messageToSend, roomId: user.roomId });
     //to clear front end message
     callback();
   };
@@ -79,10 +68,6 @@ module.exports = (io) => {
 
     //if this user was deleted send system message and new users counter
     if (user) {
-      //message history clear if no users in room
-      const usersInRoom = userStorage.getUsersInRoom(user.roomId);
-      if (usersInRoom)
-        if (!usersInRoom.length) removeMessagesByRoomId(user.roomId);
       //left user admin message
       io.to(user.roomId).emit('message', {
         username: 'admin',
