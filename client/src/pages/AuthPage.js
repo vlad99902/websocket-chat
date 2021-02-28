@@ -1,5 +1,4 @@
 import { useState, useContext } from 'react';
-import io from 'socket.io-client';
 import { uid } from 'uid';
 import styled from 'styled-components';
 import { useHistory } from 'react-router-dom';
@@ -12,9 +11,7 @@ import { UserContext } from '../context/UserContext';
 export const AuthPage = () => {
   const history = useHistory();
   //context to store username, and can use it in every component
-  const { setUsername, roomId, setRoomId, globalError } = useContext(
-    UserContext,
-  );
+  const { setUsername, roomId, setRoomId } = useContext(UserContext);
   const [usernameInputValue, setUsernameInputValue] = useState('');
   //state to check valid form or not
   const [isFormValid, setIsFormValid] = useState(true);

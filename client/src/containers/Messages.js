@@ -22,5 +22,7 @@ const MessagesWrapper = styled.div`
   border: 1px solid ${colors.$gray};
   padding: 16px;
 
+  width: 560px;
+
   overflow: scroll;
 `;

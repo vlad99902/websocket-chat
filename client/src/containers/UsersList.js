@@ -21,6 +21,8 @@ const UsersListsWrapper = styled.div`
   border-radius: 16px;
   border: 1px solid ${colors.$gray};
   padding: 16px;
+
+  overflow: scroll;
 `;
 
 const UsersListTitle = styled.div`

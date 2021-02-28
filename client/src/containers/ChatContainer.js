@@ -84,6 +84,10 @@ export const ChatContainer = ({ location }) => {
     socket.on('message', (message) => {
       setMessages([...messages, message]);
     });
+
+    return () => {
+      socket.off('message');
+    };
   }, [messages]);
 
   const sendMessage = (event) => {
@@ -106,7 +110,6 @@ export const ChatContainer = ({ location }) => {
       <ChatWrapper>
         <ChatHeader>
           <HeaderUserName>{username}</HeaderUserName>
-
           <BaseButton ml="auto" onClick={() => logoutHandler(roomId)}>
             Logout
           </BaseButton>
