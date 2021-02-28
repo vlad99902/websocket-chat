@@ -10,9 +10,11 @@ import { ChatPage } from './pages/ChatPage';
 
 export const Routes = () => {
   return (
-    <BrowserRouter>
-      <Route path="/" exact component={AuthPage} />
-      <Route path="/chat/:room" component={ChatPage} />
-    </BrowserRouter>
+    <>
+      <BrowserRouter>
+        <Route path="/" exact component={AuthPage} />
+        <Route path="/chat/:room" component={ChatPage} />
+      </BrowserRouter>
+    </>
   );
 };

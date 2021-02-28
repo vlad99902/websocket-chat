@@ -16,7 +16,13 @@ import { UsersList } from './UsersList';
 let socket;
 
 export const ChatContainer = ({ location }) => {
-  const { username, setUsername, roomId, setRoomId } = useContext(UserContext);
+  const {
+    username,
+    setUsername,
+    roomId,
+    setRoomId,
+    setGlobalError,
+  } = useContext(UserContext);
   const [users, setUsers] = useState([]);
   const [messages, setMessages] = useState([]);
   const [message, setMessage] = useState('');
@@ -62,8 +68,8 @@ export const ChatContainer = ({ location }) => {
       { username: localUsername, roomId: linkRoomId },
       (error) => {
         if (error) {
-          console.log(error);
-          logoutHandler(linkRoomId);
+          setGlobalError(error);
+          history.push('/');
         }
       },
     );

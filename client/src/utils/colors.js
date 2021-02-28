@@ -1,3 +1,6 @@
+/**
+ * Colors object to use colors in styled components
+ */
 export const colors = {
   $gray: '#C4C4C4',
   $darkGray: '#919191',

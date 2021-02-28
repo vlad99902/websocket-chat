@@ -12,7 +12,9 @@ import { UserContext } from '../context/UserContext';
 export const AuthPage = () => {
   const history = useHistory();
   //context to store username, and can use it in every component
-  const { setUsername, roomId, setRoomId } = useContext(UserContext);
+  const { setUsername, roomId, setRoomId, globalError } = useContext(
+    UserContext,
+  );
   const [usernameInputValue, setUsernameInputValue] = useState('');
   //state to check valid form or not
   const [isFormValid, setIsFormValid] = useState(true);
@@ -37,7 +39,7 @@ export const AuthPage = () => {
       authRoomId = uid();
       setRoomId(authRoomId);
     }
-    // const roomId = '0cc70ad7df3';
+
     history.push(`/chat/${authRoomId}`);
     sessionStorage.setItem(
       authRoomId,

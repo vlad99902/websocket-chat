@@ -59,6 +59,7 @@ const MessageInfoWrapper = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
+  flex-wrap: wrap;
 
   margin-bottom: 3px;
 `;
