@@ -19,8 +19,6 @@ export const ChatContainer = ({ location }) => {
   const [users, setUsers] = useState([]);
   const [messages, setMessages] = useState([]);
   const [message, setMessage] = useState('');
-  // const [roomId, setRoomId] = useState('');
-  // const [userId, setUserId] = useState('')
 
   const history = useHistory();
 
@@ -39,15 +37,24 @@ export const ChatContainer = ({ location }) => {
     let localUsername = username;
 
     if (!username && !localUserData) {
-      // logoutHandler(linkRoomId);
       history.push('/');
-      return () => {};
+      return () => {
+        socket.off();
+      };
     }
 
     if (!username && localUserData) {
       localUsername = localUserData.username;
       setUsername(localUsername);
     }
+
+    socket.on('chatHistory', (chatHistory) => {
+      setMessages([...messages, ...chatHistory]);
+    });
+
+    socket.on('roomData', ({ users }) => {
+      setUsers(users);
+    });
 
     socket.emit(
       'join',
@@ -90,6 +97,8 @@ export const ChatContainer = ({ location }) => {
     history.push('/');
   };
 
+  console.log(users);
+
   return (
     <Card>
       <ChatWrapper>
@@ -97,9 +106,9 @@ export const ChatContainer = ({ location }) => {
           <HeaderUserName>{username}</HeaderUserName>
 
           <ul>
-            {/* {users.map((user, i) => (
-              <li key={i}>{i + 1 + ' ' + user.name}</li>
-            ))} */}
+            {users.map((user, i) => (
+              <li key={i}>{i + 1 + ' ' + user.username}</li>
+            ))}
           </ul>
 
           <BaseButton ml="auto" onClick={() => logoutHandler(roomId)}>

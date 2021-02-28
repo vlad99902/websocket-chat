@@ -11,6 +11,8 @@ const {
   isRoomCreated,
 } = require('./users');
 
+const { getMessages, addMessage, getMessagesByRoomId } = require('./messages');
+
 const app = express();
 app.use(cors);
 
@@ -41,6 +43,8 @@ io.on('connection', (socket) => {
       return callback(error);
     }
 
+    socket.emit('chatHistory', getMessagesByRoomId(user.roomId));
+
     socket.emit('message', {
       username: 'admin',
       text: `${user.username}, welcome to the room ${user.roomId}`,
@@ -53,6 +57,8 @@ io.on('connection', (socket) => {
 
     socket.join(user.roomId);
 
+    io.to(user.roomId).emit('roomData', { users: getUsersInRoom(user.roomId) });
+
     console.log(
       `User ${username} was connected to the room ${roomId}. ${wasRoomCreated}`,
     );
@@ -61,11 +67,13 @@ io.on('connection', (socket) => {
 
   socket.on('sendMessage', (message, callback) => {
     const user = getUser(socket.id);
-    io.to(user.roomId).emit('message', {
+    const messageToSend = {
       username: user.username,
       text: message,
-    });
-    io.to(user.roomId).emit('roomData', { roomId: user.roomId, text: message });
+    };
+    io.to(user.roomId).emit('message', messageToSend);
+    addMessage({ ...messageToSend, roomId: user.roomId });
+    // io.to(user.roomId).emit('roomData', { roomId: user.roomId, text: message });
     callback();
   });
 
@@ -78,6 +86,9 @@ io.on('connection', (socket) => {
       io.to(user.roomId).emit('message', {
         username: 'admin',
         text: `${user.username} has left...`,
+      });
+      io.to(user.roomId).emit('roomData', {
+        users: getUsersInRoom(user.roomId),
       });
     }
   });
@@ -93,6 +104,9 @@ io.on('connection', (socket) => {
       io.to(user.roomId).emit('message', {
         username: 'admin',
         text: `${user.username} has left`,
+      });
+      io.to(user.roomId).emit('roomData', {
+        users: getUsersInRoom(user.roomId),
       });
     }
   });
