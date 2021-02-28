@@ -1,10 +1,6 @@
 const FORMAT_OPTIONS = {
-  year: 'numeric',
-  month: 'numeric',
-  day: 'numeric',
   hour: 'numeric',
   minute: 'numeric',
-  second: 'numeric',
 };
 
 /**
