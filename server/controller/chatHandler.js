@@ -71,7 +71,7 @@ module.exports = (io) => {
       //left user admin message
       io.to(user.roomId).emit('message', {
         username: 'admin',
-        text: `${user.username} has left...`,
+        text: `${user.username}, has left...`,
       });
       io.to(user.roomId).emit('roomData', {
         users: userStorage.getUsersInRoom(user.roomId),

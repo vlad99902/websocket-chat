@@ -1,6 +1,7 @@
 const express = require('express');
 const socketio = require('socket.io');
 const cors = require('cors');
+const ENDPOINT = require('./utils/serverInfo');
 
 const app = express();
 app.use(cors);
@@ -11,7 +12,7 @@ const server = require('http').createServer(app);
 
 const io = socketio(server, {
   cors: {
-    origin: 'http://localhost:3000',
+    origin: ENDPOINT,
     methods: ['GET', 'POST'],
   },
 });

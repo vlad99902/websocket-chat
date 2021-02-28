@@ -43,6 +43,16 @@ $ cd client
 $ npm run start
 ```
 
+### - If you want to change HOST
+
+##### Server
+
+- Go to server/utils/serverInfo.js
+
+##### Client
+
+- Go to client/utils/serverInfo.js
+
 ## About
 
 App to chat with ypur friends!
@@ -54,3 +64,4 @@ App to chat with ypur friends!
 - See who in room now
 - See new messages in real-time
 - Bad request page
+- Emoji detecting
