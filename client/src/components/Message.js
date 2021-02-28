@@ -2,6 +2,8 @@ import styled from 'styled-components';
 import { colors } from '../utils/colors';
 import { dateToHumanFormat } from '../utils/dateAndTime';
 
+import ReactEmoji from 'react-emoji';
+
 /**
  * Component to correctly render message and sustem notification
  * @param {object} props - message, current user username
@@ -18,11 +20,13 @@ export const Message = ({ message, username }) => {
             <Author>{message.username}</Author>
             <MessageTime>{dateToHumanFormat(message.sendTime)}</MessageTime>
           </MessageInfoWrapper>
-          <MessageText>{message.text}</MessageText>
+          <MessageText>{ReactEmoji.emojify(message.text)}</MessageText>
         </>
       ) : (
         <>
-          <AdminMessageText>{message.text}</AdminMessageText>
+          <AdminMessageText>
+            {ReactEmoji.emojify(message.text)}
+          </AdminMessageText>
         </>
       )}
     </MessageWrapper>
